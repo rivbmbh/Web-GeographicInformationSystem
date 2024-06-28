@@ -1,0 +1,59 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed'); 
+class Model_point extends CI_Model { // nama class harus sesuai dengan nama 
+
+    public function tampil_data() 
+    { 
+        $this->db->select('*'); 
+        $this->db->from('tb_point');// Tabel yang digunakan 
+        
+        //tabel yang di relasi
+        $this->db->join('tb_kecamatan ', 'tb_kecamatan.id_kecamatan = tb_point.id_kecamatan', 'left');
+        $this->db->join('tb_kampung ', 'tb_kampung.id_kampung = tb_point.id_kampung', 'left');
+
+        $this->db->order_by('id', 'desc');// Id yang di tabel 
+        return $this->db->get()->result(); 
+    } 
+
+    // TAMBAH DATA
+    public function tambah_data($data)
+    {
+        $this->db->insert('tb_point', $data);
+        $info='<div class="alert alert-success alert-dismissible">
+	    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	    <h4><i class="icon fa fa-check"></i> Sukses!</h4> Data Sukses Ditambah </div>';
+	    $this->session->set_flashdata('info',$info);
+    }
+
+    //CEK DB
+    public function detail($id) 
+    { 
+        $this->db->select('*'); 
+        $this->db->from('tb_point'); 
+        $this->db->where('id', $id); 
+        return $this->db->get()->row(); 
+    } 
+
+    //EDIT
+    public function e_point($data) 
+    { 
+        $this->db->where('id', $data['id']); 
+        $this->db->update('tb_point', $data); 
+        $info='<div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-check"></i> Sukses!</h4> Data Sukses diubah </div>';
+        $this->session->set_flashdata('info',$info);
+    } 
+
+    //DELETE
+    public function delete($data) 
+    { 
+        $this->db->where('id', $data['id']); 
+        $this->db->delete('tb_point', $data); 
+        $info='<div class="alert alert-success alert-dismissible">
+	            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	            <h4><i class="icon fa fa-check"></i> Sukses!</h4> Data Sukses dihapus </div>';
+	    $this->session->set_flashdata('info',$info);
+    } 
+
+} 
